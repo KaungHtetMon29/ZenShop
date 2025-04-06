@@ -9,7 +9,11 @@ func NewRouter() *router {
 		routes: make(map[string]map[string]http.HandlerFunc),
 	}
 }
-
+func InitializeRoutes() *router{
+	r:=NewRouter()
+	r.AddRoute("GET", "/users", nil)
+	return r
+}
 func (r *router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path:=req.URL.Path
 	method:=req.Method
