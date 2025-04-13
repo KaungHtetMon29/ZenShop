@@ -26,7 +26,7 @@ func InitializeRoutes() *router {
 }
 
 func testmw(next http.Handler) http.Handler {
-	fmt.Println("🔥 testmw() start")
+	fmt.Println("🔥 testmw() started")
 	return next
 }
 func (r *router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
