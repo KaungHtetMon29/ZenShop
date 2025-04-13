@@ -23,7 +23,7 @@ func NewDBConfig(config DBConfig) *DBConfig {
 		DbName:   config.DbName,
 		SSLMode:  config.SSLMode,
 	}
-}	
+}
 
 func (dbConfig *DBConfig) GetDSN() string {
 	return "host=" + dbConfig.Host +
