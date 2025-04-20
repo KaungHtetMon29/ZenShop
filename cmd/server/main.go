@@ -42,6 +42,7 @@ func main() {
 		&models.ProductPerOrder{},
 		&models.Category{},
 		&models.Product{},
+		&models.Brand{},
 		&models.ProductUpdateHistory{},
 		&models.RepairStatus{},
 		&models.Repair{},
@@ -55,7 +56,7 @@ func main() {
 	fmt.Println("Database migrated")
 
 	// Initialize the router
-	router := routes.InitializeRoutes()
+	router := routes.InitializeRoutes(db)
 	server := http.Server{Addr: ":8080", Handler: router}
 
 	fmt.Println("Starting server on port 8080")

@@ -8,16 +8,27 @@ type Category struct {
 }
 
 type Product struct {
-	ID                uint     `gorm:"primaryKey;autoIncrement"`
-	ProductPerOrderID uint     `gorm:"not null"` // Foreign key
-	Name              string   `gorm:"unique;not null"`
-	Price             int      `gorm:"not null"`
-	Stock             int      `gorm:"not null"`
-	CategoryID        uint     `gorm:"not null"` // Foreign key
-	Category          Category `gorm:"foreignKey:CategoryID"`
-	CreatedAt         string   `gorm:"not null"`
-	UpdatedAt         string   `gorm:"not null"`
-	UpdateBy          string   `gorm:"not null"`
+	ID              uint              `gorm:"primaryKey;autoIncrement"`
+	BrandID         uint              `gorm:"not null"` // Foreign key
+	Brand           Brand             `gorm:"foreignKey:BrandID"`
+	Name            string            `gorm:"unique;not null"`
+	Price           int               `gorm:"not null"`
+	Stock           int               `gorm:"not null"`
+	CategoryID      uint              `gorm:"not null"` // Foreign key
+	Category        Category          `gorm:"foreignKey:CategoryID"`
+	CreatedAt       string            `gorm:"not null"`
+	UpdatedAt       string            `gorm:"not null"`
+	UpdateBy        string            `gorm:"not null"`
+	ProductPerOrder []ProductPerOrder `gorm:"foreignKey:ProductID"`
+	ImageURL        string            `gorm:"not null"`
+}
+
+type Brand struct {
+	ID        uint      `gorm:"primaryKey;autoIncrement"`
+	Name      string    `gorm:"unique;not null"`
+	Products  []Product `gorm:"foreignKey:BrandID"`
+	CreatedAt string    `gorm:"not null"`
+	UpdatedAt string    `gorm:"not null"`
 }
 
 type ProductUpdateHistory struct {
@@ -51,20 +62,27 @@ type Repair struct {
 }
 
 type Order struct {
-	ID                uint            `gorm:"primaryKey;autoIncrement"`
-	UserId            string          `gorm:"not null"` // Foreign key
-	ProductPerOrderID uint            `gorm:"not null"` // Foreign key
-	ProductPerOrder   ProductPerOrder `gorm:"foreignKey:ProductPerOrderID"`
-	CreatedAt         string          `gorm:"not null"`
-	Payment           Payment         `gorm:"foreignKey:OrderID"`
-	Shipping          Shipping        `gorm:"foreignKey:OrderID"`
+	ID              uint              `gorm:"primaryKey;autoIncrement"`
+	UserId          string            `gorm:"not null"` // Foreign key
+	ProductPerOrder []ProductPerOrder `gorm:"foreignKey:OrderID"`
+	CreatedAt       string            `gorm:"not null"`
+	Payment         Payment           `gorm:"foreignKey:OrderID"`
+	Shipping        Shipping          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+type Shipping struct {
+	ID        uint   `gorm:"primaryKey;autoIncrement"`
+	Address   string `gorm:"not null"`
+	CreatedAt string `gorm:"not null"`
+	OrderID   uint   `gorm:"unique;not null"` // One-to-one relationship
+}
 type ProductPerOrder struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement"`
-	Order     []Order   `gorm:"foreignKey:ProductPerOrderID"`
-	Product   []Product `gorm:"foreignKey:ProductPerOrderID"`
-	CreatedAt string    `gorm:"not null"`
+	ID        uint    `gorm:"primaryKey;autoIncrement"`
+	OrderID   uint    `gorm:"not null"` // Foreign key
+	ProductID uint    `gorm:"not null"` // Foreign key
+	CreatedAt string  `gorm:"not null"`
+	Order     Order   `gorm:"foreignKey:OrderID"`
+	Product   Product `gorm:"foreignKey:ProductID"`
 }
 
 type Payment struct {
@@ -72,12 +90,5 @@ type Payment struct {
 	Amount    int    `gorm:"not null"`
 	CreatedAt string `gorm:"not null"`
 	Type      string `gorm:"not null"`
-	OrderID   uint   `gorm:"not null"` // Foreign key
-}
-
-type Shipping struct {
-	ID        uint   `gorm:"primaryKey;autoIncrement"`
-	Address   string `gorm:"not null"`
-	CreatedAt string `gorm:"not null"`
 	OrderID   uint   `gorm:"not null"` // Foreign key
 }
