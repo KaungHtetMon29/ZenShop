@@ -41,24 +41,22 @@ type ProductUpdateHistory struct {
 }
 
 type RepairStatus struct {
-	ID        uint     `gorm:"primaryKey;autoIncrement"`
-	UpdatedBy string   `gorm:"not null"`
-	UpdatedAt string   `gorm:"not null"`
-	Status    string   `gorm:"not null"`
-	Repair    []Repair `gorm:"foreignKey:RepairStatusID"`
+	ID        uint   `gorm:"primaryKey;autoIncrement"`
+	UpdatedBy string `gorm:"not null"`
+	UpdatedAt string `gorm:"not null"`
+	Status    string `gorm:"not null"`
+	RepairID  uint   `gorm:"not null"` // Foreign key
 }
 
 type Repair struct {
-	ID             uint         `gorm:"primaryKey;autoIncrement"`
-	UserId         string       `gorm:"not null"` // Foreign key
-	RepairStatusID uint         `gorm:"not null"` // Foreign key
-	RepairStatus   RepairStatus `gorm:"foreignKey:RepairStatusID"`
-	Product        string       `gorm:"not null"`
-	Category       string       `gorm:"not null"`
-	CreatedAt      string       `gorm:"not null"`
-	UpdatedAt      string       `gorm:"not null"`
-	Description    string       `gorm:"not null"`
-	Status         string       `gorm:"not null"`
+	ID           uint           `gorm:"primaryKey;autoIncrement"`
+	UserId       string         `gorm:"not null"` // Foreign key
+	RepairStatus []RepairStatus `gorm:"foreignKey:RepairID"`
+	Product      string         `gorm:"not null"`
+	Category     string         `gorm:"not null"`
+	CreatedAt    string         `gorm:"not null"`
+	UpdatedAt    string         `gorm:"not null"`
+	Description  string         `gorm:"not null"`
 }
 
 type Order struct {

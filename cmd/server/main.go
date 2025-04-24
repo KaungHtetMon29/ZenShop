@@ -11,6 +11,7 @@ import (
 	"net/http"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -39,16 +40,16 @@ func main() {
 
 	// Migrate the schema
 	err = db.AutoMigrate(
-		&models.ProductPerOrder{},
+		&models.Brand{},
 		&models.Category{},
 		&models.Product{},
-		&models.Brand{},
-		&models.ProductUpdateHistory{},
-		&models.RepairStatus{},
 		&models.Repair{},
+		&models.RepairStatus{},
 		&models.Order{},
-		&models.Payment{},
 		&models.Shipping{},
+		&models.ProductPerOrder{},
+		&models.Payment{},
+		&models.ProductUpdateHistory{},
 	)
 	if err != nil {
 		panic("failed to migrate database")
@@ -57,7 +58,18 @@ func main() {
 
 	// Initialize the router
 	router := routes.InitializeRoutes(db)
-	server := http.Server{Addr: ":8080", Handler: router}
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // Allow all origins, or specify like []string{"http://localhost:3000"}
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	})
+
+	// Apply CORS middleware to the router
+	handler := corsMiddleware.Handler(router)
+	server := http.Server{Addr: ":8080", Handler: handler}
 
 	fmt.Println("Starting server on port 8080")
 	fmt.Println("🔥 main() started")
