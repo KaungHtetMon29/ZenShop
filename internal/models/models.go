@@ -71,22 +71,35 @@ type Order struct {
 type Shipping struct {
 	ID        uint   `gorm:"primaryKey;autoIncrement"`
 	Address   string `gorm:"not null"`
+	FirstName string `gorm:"not null"`
+	LastName  string `gorm:"not null"`
+	City      string `gorm:"not null"`
+	State     string `gorm:"not null"`
+	ZipCode   string `gorm:"not null"`
+	Country   string `gorm:"not null"`
+	Email     string `gorm:""`
+	Phone     string `gorm:"not null"` // Changed from optional to required
 	CreatedAt string `gorm:"not null"`
 	OrderID   uint   `gorm:"unique;not null"` // One-to-one relationship
 }
+
 type ProductPerOrder struct {
 	ID        uint    `gorm:"primaryKey;autoIncrement"`
 	OrderID   uint    `gorm:"not null"` // Foreign key
 	ProductID uint    `gorm:"not null"` // Foreign key
 	CreatedAt string  `gorm:"not null"`
+	Quantity  int     `gorm:"not null"`
 	Order     Order   `gorm:"foreignKey:OrderID"`
 	Product   Product `gorm:"foreignKey:ProductID"`
 }
 
 type Payment struct {
-	ID        uint   `gorm:"primaryKey;autoIncrement"`
-	Amount    int    `gorm:"not null"`
-	CreatedAt string `gorm:"not null"`
-	Type      string `gorm:"not null"`
-	OrderID   uint   `gorm:"not null"` // Foreign key
+	ID              uint   `gorm:"primaryKey;autoIncrement"`
+	Amount          int    `gorm:"not null"`
+	CreatedAt       string `gorm:"not null"`
+	Type            string `gorm:"not null"`
+	OrderID         uint   `gorm:"not null"` // Foreign key
+	CardholderName  string `gorm:"not null"`
+	CardNumberLast4 string `gorm:"not null"`
+	ExpiryDate      string `gorm:"not null"`
 }

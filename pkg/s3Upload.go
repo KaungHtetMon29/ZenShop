@@ -23,8 +23,8 @@ type S3Config struct {
 func NewS3Config() *S3Config {
 	config := &S3Config{
 		Region:          "ap-southeast-1",
-		AccessKeyID:     "AKIAYHMTXAPOS75MZASH",
-		SecretAccessKey: "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",
+		AccessKeyID:     "",
+		SecretAccessKey: "",
 		BucketName:      "zenshopkmd",
 	}
 
